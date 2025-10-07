@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Focus Hub</title>
+    <!-- Impor Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Impor Font Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Impor Tone.js untuk audio -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
+  
+</head>
+<body class="p-4 sm:p-6 md:p-8">
+
+    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Kolom Kiri: Timer & Audio -->
+        <div class="lg:col-span-1 space-y-8">
+            <!-- Kartu Timer -->
+            <div class="card text-center">
+                <h1 class="text-2xl font-bold text-c0caf5 mb-2">Focus Hub</h1>
+                <p id="timer-display" class="text-7xl font-bold text-white tracking-tighter">25:00</p>
+                <p id="cycle-display" class="text-lg text-bb9af7 mb-6">Cycle 1 - Focus Time</p>
+                <div class="flex justify-center items-center space-x-4">
+                    <button id="pause-btn" class="btn btn-primary w-28">Pause</button>
+                    <button id="reset-btn" class="btn btn-secondary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"></path><path d="M21 21v-5h-5"></path></svg>
+                    </button>
+                    <button id="skip-btn" class="btn btn-secondary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 4 10 8-10 8V4z"></path><path d="M19 4v16"></path></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Kartu Pengaturan Audio -->
+            <div class="card">
+                <h2 class="text-xl font-bold mb-4">Audio Settings</h2>
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <button data-freq="10" data-type="Alpha (Focus)" class="audio-btn btn bg-green-500/20 text-green-300 border border-green-500/50 hover:bg-green-500/40">Focus (10Hz Alpha)</button>
+                    <button data-freq="20" data-type="Beta (Deep Focus)" class="audio-btn btn bg-blue-500/20 text-blue-300 border border-blue-500/50 hover:bg-blue-500/40">Deep Focus (20Hz Beta)</button>
+                    <button data-freq="6" data-type="Theta (Creative)" class="audio-btn btn bg-purple-500/20 text-purple-300 border border-purple-500/50 hover:bg-purple-500/40">Creative (6Hz Theta)</button>
+                    <button data-freq="8" data-type="Alpha/Theta (Relax)" class="audio-btn btn bg-cyan-500/20 text-cyan-300 border border-cyan-500/50 hover:bg-cyan-500/40">Relax (8Hz Alpha/Theta)</button>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <label for="base-freq" class="block text-sm mb-1">Base Frequency: <span id="base-freq-value">110</span> Hz</label>
+                        <input id="base-freq" type="range" min="40" max="200" value="110">
+                    </div>
+                    <div>
+                        <label for="beat-freq" class="block text-sm mb-1">Beat Frequency: <span id="beat-freq-value">10</span> Hz</label>
+                        <input id="beat-freq" type="range" min="1" max="30" value="10">
+                    </div>
+                    <div>
+                        <label for="volume" class="block text-sm mb-1">Volume: <span id="volume-value">50</span>%</label>
+                        <input id="volume" type="range" min="0" max="100" value="50">
+                    </div>
+                </div>
+                <div class="text-center mt-6">
+                    <p id="audio-status-type" class="text-lg font-semibold text-bb9af7">Alpha (Focus)</p>
+                    <button id="play-stop-audio-btn" class="btn btn-primary w-full mt-2">Play Audio</button>
+                    <p id="audio-status-playing" class="text-sm mt-2 h-4"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kolom Kanan: Pengelola Tugas -->
+        <div class="lg:col-span-2 card">
+            <h2 class="text-xl font-bold mb-1">Task Manager</h2>
+            <p class="text-xs mb-2">User ID (for collaboration/sharing if needed): <span id="user-id-display" class="font-mono bg-gray-700 px-2 py-1 rounded">Loading...</span></p>
+            <p class="text-sm text-gray-400 mb-4">Drag tasks between columns to update status. Use 25-minute focus sessions for optimal productivity.</p>
+            <div class="flex mb-6 gap-2">
+                <input id="new-task-input" type="text" class="flex-grow bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Add a new task...">
+                <button id="add-task-btn" class="btn btn-primary flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    Add
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Kolom To Do -->
+                <div>
+                    <h3 class="font-bold mb-3 text-lg text-red-400">To Do</h3>
+                    <div id="todo" class="task-column space-y-3">
+                        <!-- Tasks will be dynamically inserted here -->
+                    </div>
+                </div>
+                <!-- Kolom In Progress -->
+                <div>
+                    <h3 class="font-bold mb-3 text-lg text-yellow-400">In Progress</h3>
+                    <div id="inprogress" class="task-column space-y-3">
+                        <!-- Tasks will be dynamically inserted here -->
+                    </div>
+                </div>
+                <!-- Kolom Done -->
+                <div>
+                    <h3 class="font-bold mb-3 text-lg text-green-400">Done</h3>
+                    <div id="done" class="task-column space-y-3">
+                         <!-- Tasks will be dynamically inserted here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
+
