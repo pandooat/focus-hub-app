@@ -6,12 +6,26 @@
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-focus-hub';
 
         // Impor fungsi yang diperlukan dari SDK
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, doc, addDoc, onSnapshot, updateDoc, deleteDoc, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+                 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+           import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-analytics.js";
+           // TODO: Add SDKs for Firebase products that you want to use
+           // https://firebase.google.com/docs/web/setup#available-libraries
+         
+           // Your web app's Firebase configuration
+           // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+           const firebaseConfig = {
+             apiKey: "AIzaSyCpUbA7HQYKNxhCJm3cyBE7nB6GP9Xx-5w",
+             authDomain: "focus-hub-app-705b8.firebaseapp.com",
+             projectId: "focus-hub-app-705b8",
+             storageBucket: "focus-hub-app-705b8.firebasestorage.app",
+             messagingSenderId: "421397260571",
+             appId: "1:421397260571:web:eed97cae13bc4706b98bbe",
+             measurementId: "G-9WPKKHSSFN"
+           };
 
-        // Inisialisasi Firebase
+  // Initialize Firebase
         const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
@@ -350,3 +364,4 @@
         authenticateUser();
 
     </script>
+
